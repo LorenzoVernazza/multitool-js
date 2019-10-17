@@ -18,7 +18,16 @@ declare type Options = {
 	 * Default "ignore"
 	 */
 	ignoredReturn?: 'resolve'|'reject'|'ignore',
-	 /**
+	/**
+	 * Defines how to handle an empty input:
+	 * * "resolve": Resolves the promise.
+	 * * "reject": Rejects the promise.
+	 * * "ignore": Follows "required" property, rejects for *n* > 0, resolves otherwise.
+	 * 
+	 * Default "ignore"
+	 */
+	ifEmpty?: 'resolve'|'reject'|'ignore',
+	/**
 	  * Uses a timeout for promise resolution. Any non completed promise at the end is treated as rejected.
 	  * 
 	  * Note: Timed out promises keep running.

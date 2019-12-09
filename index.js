@@ -1,5 +1,5 @@
-const promises = require('./lib/promises');
-const props = require('./lib/props');
+const promises = require('./tools/promises');
+const props = require('./tools/props');
 module.exports = {
 	promises,
 	props,

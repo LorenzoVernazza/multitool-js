@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const promiseAny = require('../lib/promises/promiseAny');
+const promiseAny = require('../tools/promises/promiseAny');
 
 const rnd = () => (Math.random() >= 0.5);
 const timedPromise = (returnValue, rejectPromise = true, timeout = 1000) => new Promise((resolve, reject) => {

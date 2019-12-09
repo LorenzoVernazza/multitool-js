@@ -5,9 +5,17 @@
  * const obj = { foo: { bar: 0 } };
  *
  * getProp('foo.bar', obj) // returns 0
+ *
+ * For properties with "." as literal use ^ before.
+ * Any ^ before a . must be escaped as well:
+ *
+ * const obj = { "fo^.o": { bar: 0 } };
+ *
+ * getProp('fo^^^.o.bar', obj) // returns 0
+ *
  */
 declare function getProp(
-	/** Property to get. */prop: string,
+	/** Property to get. */prop: string | string[],
 	/** Object root. */root: object,
 	/** Replacement value when not found. */replacement?: any
 ): any;

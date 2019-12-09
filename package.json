@@ -1,13 +1,14 @@
 {
   "name": "multitool-js",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node.js package with many utilities, just like a multitool!",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "author": "Lorenzo Vernazza",
-  "dependencies": {
-    
+  "dependencies": {},
+  "devDependencies": {
+    "eslint-config-tidy-octopus": "^0.1.3"
   }
 }

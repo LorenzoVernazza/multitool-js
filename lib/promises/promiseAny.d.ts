@@ -47,5 +47,5 @@ declare type Options = {
 declare function promiseAny(
 	/** Promises. */promises: object | Promise<any>[], 
 	/** Options. */options: Options
-): object;
+): Promise<object|any[]>;
 export = promiseAny;

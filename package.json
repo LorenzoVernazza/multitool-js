@@ -1,6 +1,6 @@
 {
   "name": "multitool-js",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Node.js package with many utilities, just like a multitool!",
   "main": "index.js",
   "scripts": {

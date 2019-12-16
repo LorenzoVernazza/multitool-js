@@ -18,27 +18,21 @@ const setProp = (
 	if (!prop) throw Error('Missing param property');
 	const keys = (typeof prop === 'string') ? prop.split('.') : prop;
 	let cursor = root;
-	for (var index in keys) {
+	for (let index = 0; index < keys.length; index++) {
 		const key = keys[index];
 		if (typeof cursor !== 'object') {
 			throw Error('Unable to set, some sub-key was already defined as non-object: "' + keys.slice(0, index).join('.') + '".');
 		}
 		if (index == (keys.length - 1)) {
-			const descriptor = Object.getOwnPropertyDescriptor(cursor, key);
-			if (!descriptor.writable) {
-				throw Error('Unable to set, key was already defined as non-writable.');
-			} else {
-				Object.defineProperty(cursor, key, {
-					value,
-					writable
-				});
-			}
+			Object.defineProperty(cursor, key, {
+				value,
+				writable
+			});
 		} else {
 			if (!cursor.hasOwnProperty(key)) {
 				cursor[key] = {};
-			} else {
-				cursor = cursor[key];
 			}
+			cursor = cursor[key];
 		}
 	}
 	return root;

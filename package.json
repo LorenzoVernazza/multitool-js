@@ -1,0 +1,14 @@
+{
+  "name": "multitool-js",
+  "version": "1.1.0-beta1",
+  "description": "Bundle of Node.js utilities!",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "Lorenzo Vernazza",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint-config-tidy-octopus": "^0.1.3"
+  }
+}

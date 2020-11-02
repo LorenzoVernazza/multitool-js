@@ -5,6 +5,7 @@ const setProp = require('./setProp');
 const replaceProp = require('./replaceProp');
 const replacePropAsync = require('./replacePropAsync');
 
+/** Objects group */
 module.exports = {
 	getProp,
 	getPropAdvanced,

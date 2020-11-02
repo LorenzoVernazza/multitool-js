@@ -1,10 +1,11 @@
 {
   "name": "multitool-js",
-  "version": "1.1.0-beta1",
+  "version": "1.2.0",
   "description": "Bundle of Node.js utilities!",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "test": "mocha"
   },
   "author": "Lorenzo Vernazza",
   "dependencies": {},

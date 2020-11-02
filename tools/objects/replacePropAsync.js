@@ -1,5 +1,5 @@
 /**
- * Sets a property in an object.
+ * Replaces a property in an object.
  * For nested properties use "dot" notation:
  *
  * const obj = {};

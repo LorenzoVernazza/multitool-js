@@ -17,7 +17,7 @@ function test(param, expected) {
     });
 }
 
-describe('objects/getProp', function() {
+describe.only('objects/getProp', function() {
     describe('Using the following object: ' + JSON.stringify(testObj), {});
 
     test('a.b', testObj.a.b)

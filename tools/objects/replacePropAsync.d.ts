@@ -1,5 +1,5 @@
 /**
- * Sets a property in an object.
+ * Replaces a property in an object.
  * For nested properties use "dot" notation:
  *
  * const obj = {};
@@ -12,7 +12,7 @@
  *
  * "obj" is now { foo: { bar: 1 } }
  */
-declare async function replacePropAsync(
+declare function replacePropAsync(
 	/** Property to set. */
 	prop: string,
 	/** Object root. */

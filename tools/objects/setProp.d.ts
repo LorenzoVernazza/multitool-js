@@ -10,7 +10,7 @@
  *
  */
 declare function setProp(
-	/** Property to set. */prop: string,
+	/** Property to set. */prop: string|string[],
 	/** Object root. Creates a new object if not set. */root?: object,
 	/** Property value. */value?: any,
 	/** Setter options. */

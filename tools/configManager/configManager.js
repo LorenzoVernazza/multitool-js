@@ -36,7 +36,43 @@ function mergeConfigWithEnv(newConfig, oldConfig = config) {
 			if (!oldConfig[key] || typeof oldConfig[key] !== 'object') oldConfig[key] = {};
 			mergeConfigWithEnv(value, oldConfig[key]);
 		} else if (typeof value == 'string') {
-			const envValue = process.env[value];
+			let envValue;
+			if (value.startsWith('BOOL:')) {
+				let trimmed = value.substr(5);
+				switch (trimmed.toLowerCase()) {
+					case 'true': 
+						envValue = true; break;
+					case 'false': 
+						envValue = false; break;
+				}
+			} else if (value.startsWith('JSON:')) {
+				let trimmed = value.substr(5);
+				try {
+					envValue = JSON.parse(process.env[trimmed]);
+				} catch (err) {
+					envValue = process.env[trimmed];
+				}
+			} else if (value.startsWith('JSON_ONLY:')) {
+				let trimmed = value.substr(10);
+				try {
+					envValue = JSON.parse(process.env[trimmed]);
+				} catch (err) {
+					envValue = undefined;
+				}
+			} else if (value.startsWith('NUMBER:')) {
+				let trimmed = value.substr(7);
+				if (process.env[trimmed] !== undefined)	envValue = Number(process.env[trimmed]);
+				if (envValue === NaN) envValue = process.env[trimmed];
+			} else if (value.startsWith('NUMBER_NAN:')) {
+				let trimmed = value.substr(11);
+				if (process.env[trimmed] !== undefined)	envValue = Number(process.env[trimmed]);
+			} else if (value.startsWith('NUMBER_ONLY:')) {
+				let trimmed = value.substr(12);
+				envValue = Number(process.env[trimmed]);
+				if (envValue === NaN) envValue = undefined;
+			} else {
+				envValue = process.env[value];
+			}
 			if (envValue !== undefined)	oldConfig[key] = envValue;
 		}
 	}

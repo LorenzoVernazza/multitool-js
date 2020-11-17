@@ -1,6 +1,22 @@
 # Multitool JS
 A collection of useful methods.
 
+Each *tool* or group of *tools* can be required/imported on its own like this:
+```js
+// Full require
+const multitool = require('multitool-js');
+const getProp = multitool.objects.getProp;
+```
+```js
+// *tool-group* or *single-tool*
+const objectTools = require('multitool-js/tools/objects');
+const getProp = objectTools.getProp;
+```
+```js
+// *tool* from *tool-group*
+const getProp = require('multitool-js/tools/objects/getProp');
+```
+
 ### *Objects* (tool group)
 ```js 
 const objects = require('multitool-js/tools/objects');
@@ -44,6 +60,33 @@ const strings = require('multitool-js/tools/strings');
 ---
 
 ### *ConfigManager* (tool)
+ConfigManager allows to easily manage application configurations.
+The configManager tool reads the following configuration files (in the given order) and merges the configurations:
+- `default.json` - Default configurations.
+- `production.json` - Production configurations, enabled only with *NODE_ENV* = *production*.
+- `development.json` - Development configurations, enabled only with *NODE_ENV* != *production*.
+- `local.json` - Local configurations.
+- `custom-environment-variables.json` - Env variables overrides, loads the value of the environment variable as the config value: `{ "varaible": "ENV_VARIABLE_NAME" }`.
+  
+  Additionally the env variable name can be prefixed with the following terms to forcefully cast/parse the value:
+  - `JSON:` parses the value, if the value is not parsable the whole string is applied:
+  
+    `{ "varaible": "JSON:ENV_VARIABLE_NAME" }`:
+    | "ENV_VARIABLE_NAME" value | "varaible" value |
+    |--------|-------------| 
+    | 'some_string' | `"some_string"` | 
+    | '{"some":"json"}' | `{ some: "json" }` |
+
+  - `JSON_ONLY:` parses the value, if the value is not parsable is ignored:
+  
+    `{ "varaible": "JSON_ONLY:ENV_VARIABLE_NAME" }`:
+    | "ENV_VARIABLE_NAME" value | "varaible" value |
+    |--------|-------------| 
+    | 'some_string' | `"some_string"` | 
+    | '{"some":"json"}' | `{ some: "json" }` |
+
+
+
 ```js 
 const configManager = require('multitool-js/tools/configManager');
 ```
@@ -52,24 +95,9 @@ const configManager = require('multitool-js/tools/configManager');
 | get | | 
 | has | |
 | set | |
-| load | |
+| reload | |
 | save | |
+| saveSync | |
 | delete | |
+| deleteSync | |
 ---
-
-
-Each *tool* or group of *tools* can be required/imported on its own like this:
-```js
-// Full require
-const multitool = require('multitool-js');
-const getProp = multitool.objects.getProp;
-```
-```js
-// *tool-group* or *single-tool*
-const objectTools = require('multitool-js/tools/objects');
-const getProp = objectTools.getProp;
-```
-```js
-// *tool* from *tool-group*
-const getProp = require('multitool-js/tools/objects/getProp');
-```

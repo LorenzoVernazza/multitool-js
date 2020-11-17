@@ -13,7 +13,7 @@ function getPath(fileName) {
 }
 
 function getEnv() {
-	return getProp(process.env.NODE_ENV, 'development');
+	return (process.env.NODE_ENV || 'development');
 }
 
 function setEnv(value = 'production') {

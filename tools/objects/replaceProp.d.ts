@@ -12,7 +12,7 @@
  *
  * "obj" is now { foo: { bar: 1 } }
  */
-declare function replaceProp(
+export default function replaceProp(
 	/** Property to set. */
 	prop: string,
 	/** Object root. */
@@ -32,4 +32,3 @@ declare function replaceProp(
 		createMissing: boolean|string
 	}
 ): object;
-export = replaceProp;

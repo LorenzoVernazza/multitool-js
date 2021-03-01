@@ -4,3 +4,9 @@ deepClone
 automated tests
 
 better documentation
+
+add config prop
+
+installation options
+
+merge env json

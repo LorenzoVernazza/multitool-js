@@ -13,6 +13,24 @@ const typeFiles = {
     'default': 'default.json'
 }
 
+function isInitialized() {
+    if (!fs.existsSync('config')) {
+        throw Error('Missing config directory.')
+    }
+    if (!fs.statSync("config").isDirectory()) {
+        throw Error('"config" is not a directory.')
+    }
+    return true;
+}
+
+function checkInitialization() {
+    try {
+        (isInitialized()) 
+    } catch(err) {
+        console.log(err.message);
+    }
+}
+
 function createFile(target, replace = false) {
     const fpath = path.join('config', target);
     const exists = fs.existsSync(fpath);
@@ -78,14 +96,16 @@ function init({
 }
 
 function enable(configType) {
+    if (!configType) throw Error('No type specified!');
     if (configType === 'all') {
         return enable(types);
     } else if (Array.isArray(configType)) {
+        if (!configType.length) throw Error('No type specified!');
         return configType.forEach((type) => enable(type));
     } else if (typeFiles[configType]) {
         return enableFile(typeFiles[configType]);
     } else {
-        return console.log(`Unknown config type "${configType}"`);
+        throw Error(`Unknown config type "${configType}"`);
     }
 }
 
@@ -111,6 +131,14 @@ function remove(configType) {
     } else {
         return console.log(`Unknown config type "${configType}"`);
     }
+}
+
+function addProperty() {
+
+}
+
+function removeProperty() {
+
 }
 
 function help() {
@@ -140,7 +168,21 @@ disable <config> | disables <config> file
 
 remove <config>  | removes <config> file
 
+add-property (ap) [<property>] | adds a new property to the config files. Asks the value for each enabled config file.
+
+remove-property (rp) [<property>] [<config file>] | removes a property from the config files.
+
 `);
+}
+
+function exit(message = '', code = 0) {
+    if (code) {
+        if (message) console.error(message);
+        process.exit(code);
+    } else {
+        if (message) console.log(message);
+        process.exit(0);
+    }
 }
 
 function start() {
@@ -149,38 +191,37 @@ function start() {
         flags
     } = parseArgs();
     const command = commands.shift();
-    switch (command) {
-        case 'init':
-            return init({
-                replace: (flags.r || flags.replace),
-                skipDevelopment: (flags['no-dev'] | flags['no-development']),
-                skipProduction: (flags['no-prod'] | flags['no-production']),
-                skipEnv: (flags['no-env']),
-                skipLocal: (flags['no-local']),
-            });
-        case 'help':
-            return help()
-        case 'enable':
-            if (!commands.length) {
-                return console.log('Missing type');
-            } else {
-                return enable(commands)
-            }
-        case 'disable':
-            if (!commands.length) {
-                return console.log('Missing type');
-            } else {
-                return disable(commands)
-            }
-        case 'remove':
-            if (!commands.length) {
-                return console.log('Missing type');
-            } else {
-                return remove(commands)
-            }
-        default:
-            if (command) console.log(`Unknown command "${command}"!\n`);
-            return help();
+
+    try {
+        switch (command) {
+            case 'init':
+                return init({
+                    replace: (flags.r || flags.replace),
+                    skipDevelopment: (flags['no-dev'] | flags['no-development']),
+                    skipProduction: (flags['no-prod'] | flags['no-production']),
+                    skipEnv: (flags['no-env']),
+                    skipLocal: (flags['no-local'])
+                });
+            case 'help':
+                return help()
+            case 'enable':
+                return enable(commands);
+            case 'disable':
+                return disable(commands);
+            case 'remove':
+                return remove(commands);
+            case 'add-property': 
+            case 'ap':
+                return addProperty(commands, flags);
+            case 'remove-property': 
+            case 'rp':
+                return removeProperty(commands, flags);
+            default:
+                if (command) console.log(`Unknown command "${command}"!\n`);
+                return help();
+        }
+    } catch(err) {
+        exit(err, 1);
     }
 }
 

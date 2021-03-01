@@ -3,7 +3,7 @@
  * 
  * E.g. ellipsis("hello from multitool-js!", 8) => "hello..."
  */
-function ellipsis(
+export default function ellipsis(
 	/** Value to trim */input,
 	/** Maximum length of the output string */length,
 	/** Replacement string, default ... */replacement = '...'
@@ -14,5 +14,3 @@ function ellipsis(
 		return input;
 	}
 }
-
-module.exports = ellipsis;

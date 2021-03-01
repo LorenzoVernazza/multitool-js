@@ -1,3 +1,5 @@
+declare module 'multitool-js/tools/configManager';
+
 /** The value of the NODE_ENV variable. */
 declare var env: string;
 

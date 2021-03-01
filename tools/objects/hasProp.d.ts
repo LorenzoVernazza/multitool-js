@@ -6,9 +6,8 @@
  *
  * hasProp('foo.bar', obj) // returns true
  */
-function hasProp(
+export default function hasProp(
 	/** Property to check. */prop: string|string[],
 	/** Object root. */root: object,
 ): any;
 
-export = hasProp;

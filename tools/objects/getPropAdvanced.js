@@ -8,17 +8,17 @@ const regexC = /((\^\^)+)(\.|$)/g;
  *
  * const obj = { foo: { bar: 0 } };
  *
- * getProp('foo.bar', obj) // returns 0
+ * getPropAdvanced('foo.bar', obj) // returns 0
  *
  * For properties with "." as literal use ^ before.
  * Any ^ before a . must be escaped as well:
  *
  * const obj = { "fo^.o": { bar: 0 } };
  *
- * getProp('fo^^^.o.bar', obj) // returns 0
+ * getPropAdvanced('fo^^^.o.bar', obj) // returns 0
  *
  */
-const getProp = (
+const getPropAdvanced = (
 	/** Property to get. */prop,
 	/** Object root. */root,
 	/** Replacement value when not found. */replacement = undefined
@@ -33,4 +33,4 @@ const getProp = (
 	}
 	return current;
 };
-module.exports = getProp;
+module.exports = getPropAdvanced;

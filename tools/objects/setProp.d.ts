@@ -9,7 +9,7 @@
  * "obj" is now { foo: { bar: 0 } }
  *
  */
-declare function setProp(
+export default function setProp(
 	/** Property to set. */prop: string|string[],
 	/** Object root. Creates a new object if not set. */root?: object,
 	/** Property value. */value?: any,
@@ -24,5 +24,5 @@ declare function setProp(
 		 * - "last-ignore" as "last" but does not throw errors. 
 		 * Default *true*. */ 
 		createMissing: boolean|string
-	}): object;
-export = setProp;
+	}
+): object;

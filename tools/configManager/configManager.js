@@ -37,7 +37,16 @@ function mergeConfigWithEnv(newConfig, oldConfig = config) {
 			mergeConfigWithEnv(value, oldConfig[key]);
 		} else if (typeof value == 'string') {
 			let envValue;
-			if (value.startsWith('BOOL:')) {
+			let merge = false;
+			if (value.startsWith('MERGE:')) {
+				let trimmed = value.substr(6);
+				try {
+					envValue = JSON.parse(process.env[trimmed]);
+					merge = true;
+				} catch (err) {
+					envValue = process.env[trimmed];
+				}
+			} else if (value.startsWith('BOOL:')) {
 				let trimmed = value.substr(5);
 				switch (trimmed.toLowerCase()) {
 					case 'true': 
@@ -73,7 +82,13 @@ function mergeConfigWithEnv(newConfig, oldConfig = config) {
 			} else {
 				envValue = process.env[value];
 			}
-			if (envValue !== undefined)	oldConfig[key] = envValue;
+			if (envValue !== undefined)	{
+				if (merge) {
+					mergeConfig({ [key]: envValue }, oldConfig);
+				} else {
+					oldConfig[key] = envValue;
+				}
+			}
 		}
 	}
 }

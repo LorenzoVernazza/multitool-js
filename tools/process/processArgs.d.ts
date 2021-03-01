@@ -1,6 +1,5 @@
-
 /** Parses arguments and returns an object. */
-function processArgs(
+export default function processArgs(
 	/** Array of arguments, defaults as *process.argv.slice(2)*. */
 	args:? string[],
 	/** Configuration object. */
@@ -50,5 +49,3 @@ function processArgs(
 	/** Array of arguments after the breaker (--). */
 	rest: string[]
 };
-
-export = processArgs;

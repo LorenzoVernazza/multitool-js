@@ -12,7 +12,7 @@
  *
  * "obj" is now { foo: { bar: 1 } }
  */
-declare function replacePropAsync(
+export default function replacePropAsync(
 	/** Property to set. */
 	prop: string,
 	/** Object root. */
@@ -32,4 +32,3 @@ declare function replacePropAsync(
 		createMissing: boolean|string
 	}
 ): Promise<object>;
-export = replacePropAsync;

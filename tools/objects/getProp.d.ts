@@ -6,9 +6,8 @@
  *
  * getProp('foo.bar', obj) // returns 0
  */
-declare function getProp(
+export default function getProp(
 	/** Property to get. */prop: string|string[],
 	/** Object root. */root: object,
 	/** Default value when not found. */defaultValue?: any
 ): any;
-export = getProp;

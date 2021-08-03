@@ -10,3 +10,9 @@ add config prop
 installation options
 
 merge env json
+
+cli maker
+
+package.json reader?
+
+lock configuration

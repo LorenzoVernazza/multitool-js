@@ -1,15 +1,27 @@
 #!/usr/bin/env node
 const fs = require('fs')
-const path = require('path')
+const path = require('path');
+const setProp = require('../tools/objects/setProp');
 const parseArgs = require('../tools/process/processArgs');
+const helper = require('./helper.json');
 
 const types = ['env', 'local', 'production', 'development', 'default'];
+/* const types = {
+    env: { description: 'Fetch config values from env variables' },
+    local: { description: 'Overrides config' },
+    production: { description: 'Fetch config values from env variables' },
+    development: { description: 'Fetch config values from env variables' },
+    default: { description: 'Fetch config values from env variables' },
+} */
+
 const typeFiles = {
     'env': 'custom-environment-variables.json',
     'custom-environment-variables': 'custom-environment-variables.json',
     'local': 'local.json',
     'production': 'production.json',
+    'prod': 'production.json',
     'development': 'development.json',
+    'dev': 'development.json',
     'default': 'default.json'
 }
 
@@ -133,18 +145,41 @@ function remove(configType) {
     }
 }
 
+function replaceProperty(targetFile, property, value) {
+    try {
+        const data = JSON.parse(fs.readFileSync(targetFile).toString());
+        setProp(property, data, value);
+        fs.writeFileSync(targetFile, JSON.stringify(data, null, 2));
+        return true;
+    } catch(err) {
+        return false;
+    }
+}
+
 function addProperty() {
-
+    console.log('not implemented');
 }
 
-function removeProperty() {
-
+function removeProperty(data) {
+    const [property, ...files] = data;
+    for (const target of (files.length ? files : types)) {
+        const file = typeFiles[target];
+        if (!file) {
+            console.log(`Ignoring unknown type "${target}"`);
+            continue;
+        }
+        if (replaceProperty(path.join('config', file), property)) console.log(`Removed from "${target}"`);
+        if (replaceProperty(path.join('config',  `_${file}`), property)) console.log(`Removed from "${target}" (disabled)`);
+    }
 }
 
-function help() {
-console.log(`
-        === Multitool.JS Config Manager ===
+function help(command) {
+    let body = '';
+    if (command && helper.commands.find((_c) => (command === _c.command || (_c.altNames || []).includes(command)))) {
 
+    } else {
+        if (command) console.log(`Command "${command}" not found!\n`);
+        body = `
 --- Info:
 
 Config types (higher has priority): 
@@ -159,20 +194,23 @@ default     | default                      | Default config
 
 
 --- Commands:
+`;
+        for (const command of helper.commands) {
+            body += `\n${command.name} `
+            if (command.altNames && command.altNames.length) {
+                body += `(${command.altNames.join('|')}) `
+            }
+            if (command.flags && command.flags.length) body += '{flags} ';
+            for (const arg of (command.arguments || [])) {
+                body += `${arg.mandatory ? '<' : '[<'}${arg.name}${arg.mandatory ? '>' : '>]'} `
+            }
+            body += `| ${command.description}\n`;
+        }
+    }
 
-init             | creates "config" folder and files
-                        
-enable <config>  | creates/enables <config> file
-
-disable <config> | disables <config> file
-
-remove <config>  | removes <config> file
-
-add-property (ap) [<property>] | adds a new property to the config files. Asks the value for each enabled config file.
-
-remove-property (rp) [<property>] [<config file>] | removes a property from the config files.
-
-`);
+    console.log('\n');
+    console.log(`\t\t${helper.header}`);
+    console.log(body);
 }
 
 function exit(message = '', code = 0) {
@@ -203,7 +241,7 @@ function start() {
                     skipLocal: (flags['no-local'])
                 });
             case 'help':
-                return help()
+                return help(commands.shift())
             case 'enable':
                 return enable(commands);
             case 'disable':

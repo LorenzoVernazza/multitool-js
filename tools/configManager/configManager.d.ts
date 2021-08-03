@@ -6,11 +6,16 @@ declare var env: string;
 /** The path where the configurations are saved. */
 declare const CONFIG_DIR: string;
 
+
 declare function set(
 	/** Property to set. */key: string|string[], 
 	/** Value to apply. */value: any, 
 	/** Defines if the property will be writable, defaults true. */writable?: boolean
 ): any;
+
+/**
+ * Checks if a property is defined in the configuration.
+ */
 declare function has(
 	/** Property to check. */key: string|string[]
 ): boolean;
@@ -28,7 +33,7 @@ declare function get(
 	/** Default value when not found. */defaultValue?: any
 ): any;
 
-/** Reloads the configuration. */
+/** Reloads all the configuration values (loses unsaved values). */
 declare function load(
 	/** 
 	 * If *true* wipes the current configuration and starts fresh.
@@ -38,7 +43,10 @@ declare function load(
 	 */wipe?: boolean,
 ): any;
 
+/** Saves the configuration file (includes values set during runtime). */
 declare function saveConfig(): Promise<any>;
+
+/** Synchronously saves the configuration file (includes values set during runtime). */
 declare function saveConfigSync(): any;
 declare function deleteConfig(): Promise<any>;
 declare function deleteConfigSync(): any;

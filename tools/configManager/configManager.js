@@ -93,22 +93,21 @@ function mergeConfigWithEnv(newConfig, oldConfig = config) {
 	}
 }
 
-function loadConfigFile(fileName) {
+function readConfigFile(fileName) {
 	const defaultPath = getPath(fileName);
 	if (fs.existsSync(defaultPath)) {
 		try {
-			mergeConfig(JSON.parse(fs.readFileSync(defaultPath)));
+			return JSON.parse(fs.readFileSync(defaultPath));
 		} catch (e) {}
 	}
 }
 
+function loadConfigFile(fileName) {
+	mergeConfig(readConfigFile(fileName) || {});
+}
+
 function loadEnvFile(fileName) {
-	const defaultPath = getPath(fileName);
-	if (fs.existsSync(defaultPath)) {
-		try {
-			mergeConfigWithEnv(JSON.parse(fs.readFileSync(defaultPath)));
-		} catch (e) {}
-	}
+	mergeConfigWithEnv(readConfigFile(fileName) || {})
 }
 
 function wipeConfig() {
@@ -132,18 +131,31 @@ function load(wipe = true) {
 
 // Export declarations
 
-function saveConfig() {
-	return fs.writeFile(getPath(RUNTIME_FILE), JSON.stringify(config));
+function createSaveConfig(options = {}) {
+	if (options.whitelist) {
+		let whitelistedConfig = options.overwrite ? {} : (readConfigFile(RUNTIME_FILE) || {});
+		for (const item of options.whitelist) {
+			let value = getProp(item, config);
+			if (value !== undefined) setProp(item, whitelistedConfig, value);
+		}
+		return JSON.stringify(whitelistedConfig);
+	}
+	return JSON.stringify(config)
 }
-function saveConfigSync() {
-	fs.writeFileSync(getPath(RUNTIME_FILE), JSON.stringify(config));
+function saveConfig(options) {
+	return fs.writeFile(getPath(RUNTIME_FILE), createSaveConfig(options));
 }
+function saveConfigSync(options) {
+	fs.writeFileSync(getPath(RUNTIME_FILE), createSaveConfig(options));
+}
+
 function deleteConfig() {
 	return fs.unlink(getPath(RUNTIME_FILE));
 }
 function deleteConfigSync() {
 	fs.unlinkSync(getPath(RUNTIME_FILE));
 }
+
 function set(key, value, writable = true) {
 	return setProp(key, config, value, { writable })
 };

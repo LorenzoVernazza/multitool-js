@@ -29,16 +29,6 @@ const objects = require('multitool-js/tools/objects');
 | replaceProp | Replaces a property in an object | 
 ---
 
-### *Promises* (tool group)
-```js 
-const promises = require('multitool-js/tools/promises');
-```
-| tool | description |
-|--------|-------------| 
-| promiseAny | Handles a group of promises, extendin the capabilities of ``Promise.all()`` | 
-| timer | Returns a promise that is resolved/rejected after a timeout |
----
-
 ### *Process* (tool group)
 ```js 
 const process = require('multitool-js/tools/process');
@@ -49,6 +39,16 @@ const process = require('multitool-js/tools/process');
 | Timer | Creates a timer, either with standard resolution (millisecond) or high resolution (nanoseconds) | 
 ---
 
+### *Promises* (tool group)
+```js 
+const promises = require('multitool-js/tools/promises');
+```
+| tool | description |
+|--------|-------------| 
+| promiseAny | Handles a group of promises, extendin the capabilities of ``Promise.all()`` | 
+| timer | Returns a promise that is resolved/rejected after a timeout |
+---
+
 ### *Strings* (tool group)
 ```js 
 const strings = require('multitool-js/tools/strings');
@@ -57,6 +57,15 @@ const strings = require('multitool-js/tools/strings');
 |--------|-------------| 
 | ellipsis | Trims a string to a given length and applies ellipsis | 
 | quotes | Offers some methods to add and check quotations on strings |
+---
+
+### *Web* (tool group)
+```js 
+const web = require('multitool-js/tools/web');
+```
+| tool | description |
+|--------|-------------| 
+| colors | Utilities to handle web colors (hex, rgb, wsl, cmyk) | 
 ---
 
 ### *ConfigManager* (tool)
@@ -85,7 +94,7 @@ The configManager tool reads the following configuration files (in the given ord
 
   - `MERGE:` like `JSON` but merges the value with current value (if present).
 
-  - `BOOL:` reads the strings `'true'` and `'false'` and sets the corresponding boolean value.
+  - `BOOLEAN:` reads the strings `'true'`, `'1'`, `'false'`, `'0'` and sets the corresponding boolean value.
 
   - `NUMBER:` casts the value as number. If the value is not a valid number the string is kept instead.
 

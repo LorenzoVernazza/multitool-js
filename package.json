@@ -1,24 +1,13 @@
 {
-  "name": "multitool-js",
-  "version": "1.4.0",
   "description": "Bundle of Node.js utilities!",
   "main": "index.js",
-  "bin": {
-    "multitool": "./scripts/index.js",
-    "multitool-config": "./scripts/config.js"
-  },
-  "files": [
-    "index.js",
-    "scripts/",
-    "tools/"
-  ],
   "scripts": {
-    "start": "node .",
     "test": "mocha"
   },
   "author": "Lorenzo Vernazza",
   "dependencies": {},
   "devDependencies": {
+    "eslint": "^8.1.0",
     "eslint-config-tidy-octopus": "^0.1.3"
   }
 }

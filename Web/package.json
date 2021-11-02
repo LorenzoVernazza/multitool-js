@@ -1,0 +1,22 @@
+{
+  "name": "@multitool-js/web",
+  "version": "1.0.0",
+  "description": "A collection of useful web-oriented methods.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js",
+    "tools/"
+  ],
+  "keywords": [
+    "multitool"
+  ],
+  "author": "Lorenzo Vernazza",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.1.0",
+    "eslint-config-tidy-octopus": "^0.1.3"
+  }
+}

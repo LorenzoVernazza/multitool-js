@@ -18,11 +18,11 @@ const regexC = /((\^\^)+)(\.|$)/g;
  * getPropAdvanced('fo^^^.o.bar', obj) // returns 0
  *
  */
-const getPropAdvanced = (
-	/** Property to get. */prop,
-	/** Object root. */root,
-	/** Replacement value when not found. */replacement = undefined
-) => {
+function getPropAdvanced(
+		/** Property to get. */prop,
+		/** Object root. */root,
+		/** Replacement value when not found. */replacement = undefined
+) {
 	if (!root) return replacement;
 	if (!prop) return root;
 	const keys = Array.isArray(prop) ? prop : (prop.match(regexA) || []).map((piece) => (piece.replace(regexB, '.').replace(regexC, (...groups) => (groups[1].slice(groups[1].length / 2) + groups[3]))));
@@ -32,5 +32,7 @@ const getPropAdvanced = (
 		else current = current[key];
 	}
 	return current;
-};
+}
+
+getPropAdvanced.getPropAdvanced = getPropAdvanced;
 module.exports = getPropAdvanced;

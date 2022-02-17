@@ -3,13 +3,17 @@ A collection of useful promise-related methods.
 
 Each *tool* or group of *tools* can be required/imported on its own like this:
 ```js
-// Full require
+// Full require/import
 const multitool = require('@multitool-js/promises');
 const promiseAny = multitool.promiseAny;
+// OR
+import { promiseAny } from '@multitool-js/promises';
 ```
 ```js
-// Single *tool* require
+// Single *tool* require/import
 const promiseAny = require('@multitool-js/promises/tools/promiseAny');
+// OR
+import promiseAny from ('@multitool-js/promises/tools/promiseAny');
 ```
 
 ### *Tools:*

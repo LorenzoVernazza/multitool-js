@@ -9,7 +9,7 @@
  * "obj" is now { foo: { bar: 0 } }
  *
  */
-export default function setProp(
+declare function setProp(
 	/** Property to set. */prop: string|string[],
 	/** Object root. Creates a new object if not set. */root?: object,
 	/** Property value. */value?: any,
@@ -26,3 +26,5 @@ export default function setProp(
 		createMissing: boolean|string
 	}
 ): object;
+
+export { setProp };

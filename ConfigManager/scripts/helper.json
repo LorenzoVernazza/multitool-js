@@ -2,7 +2,7 @@
     "header": "=== Multitool.JS Config Manager ===",
     "commands": [{
         "name": "init",
-        "description": "creates \"config\" folder and files",
+        "description": "Creates \"config\" folder and files",
         "flags": [{
             "names": ["--no-prod", "--no-production"],
             "description": "Skips the creation of the production file."
@@ -12,25 +12,82 @@
         }]
     }, {
         "name": "enable",
-        "arguments": [{ "name": "config", "mandatory": true }],
-        "description": "creates/enables <config> file"
+        "arguments": [{ "name": "config", "required": true }],
+        "description": "Creates/enables <config> file"
     }, {
         "name": "disable",
-        "arguments": [{ "name": "config", "mandatory": true }],
-        "description": "disables <config> file"
+        "arguments": [{ "name": "config", "required": true }],
+        "description": "Disables <config> file"
     }, {
         "name": "remove",
-        "arguments": [{ "name": "config", "mandatory": true }],
-        "description": "removes <config> file"
+        "arguments": [{ "name": "config", "required": true }],
+        "description": "Removes <config> file"
     }, {
-        "name": "add-property",
-        "altNames": ["ap"],
-        "arguments": [{ "name": "property", "mandatory": true }],
-        "description": "adds a new property to the config files. Asks the value for each enabled config file."
+        "name": "set-property",
+        "altNames": ["sp"],
+        "arguments": [{ 
+            "name": "property", 
+            "required": true,
+            "description": "The property to be defined. Multiple properties can be added at the same time."
+        }],
+        "description": "Sets the value of one or more properties to the config files. Accepts multiple properties",
+        "flags": [{  
+            "names": ["--default"],
+            "value": 1,
+            "description": "Defines the default value"
+        }, {
+            "names": ["--dev", "--development"],
+            "value": 1,
+            "description": "Defines the development value"
+        }, {
+            "names": ["--prod", "--production"],
+            "value": 1,
+            "description": "Defines the production value"
+        }, {
+            "names": ["--local"],
+            "value": 1,
+            "description": "Defines the local value"
+        }, {
+            "names": ["--env"],
+            "value": 1,
+            "description": "Defines the env value"
+        }, {
+            "names": ["--all"],
+            "value": 1,
+            "description": "Defines the value of all the file types, is overridden by type-specific assignments"
+        }, {
+            "names": ["--no-replace"],
+            "description": "When defined skips parameters with existing values"
+        }]
     }, {
         "name": "remove-property",
         "altNames": ["rp"],
-        "arguments": [{ "name": "property", "mandatory": true }, { "name": "config file" }],
-        "description": "removes a property from the config files."
+        "arguments": [{ "name": "property", "required": true }, { "name": "config file" }],
+        "description": "Removes a property from the config files."
+    }, {
+        "name": "get-property",
+        "altNames": ["gp"],
+        "arguments": [{ 
+            "name": "property", 
+            "required": true,
+            "description": "The property to be retrieved. Multiple properties can be retrieved at the same time."
+        }],
+        "description": "Gets the value of one or more properties from the config file(s). Accepts multiple properties",
+        "flags": [{  
+            "names": ["--default"],
+            "description": "Retrieves the properties from the default config file"
+        }, {
+            "names": ["--dev", "--development"],
+            "description": "Retrieves the properties from the development config file"
+        }, {
+            "names": ["--prod", "--production"],
+            "description": "Retrieves the properties from the production config file"
+        }, {
+            "names": ["--local"],
+            "description": "Retrieves the properties from the local config file"
+        }, {
+            "names": ["--all"],
+            "description": "Retrieves the properties from all the config files"
+        }]
     }]
 }

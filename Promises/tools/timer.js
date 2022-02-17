@@ -12,4 +12,5 @@ function timer(
 		setTimeout(rejectPromise ? reject : resolve, timeout, ...args);
 	});
 }
+
 module.exports = timer;

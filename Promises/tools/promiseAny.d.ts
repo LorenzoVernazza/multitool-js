@@ -44,7 +44,9 @@ declare type Options = {
  *
  * For each promise returns { res } if resolved, { err } if rejected.
  */
-export default function promiseAny(
+declare function promiseAny(
 	/** Promises. */promises: object | Promise<any>[], 
 	/** Options. */options: Options
 ): Promise<object|any[]>;
+
+export = promiseAny;

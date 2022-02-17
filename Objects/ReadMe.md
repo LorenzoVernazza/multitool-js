@@ -3,13 +3,17 @@ A collection of useful object-oriented methods.
 
 Each *tool* or group of *tools* can be required/imported on its own like this:
 ```js
-// Full require
+// Full require/import
 const multitool = require('@multitool-js/objects');
 const getProp = multitool.getProp;
+// OR
+import { getProp } from '@multitool-js/objects';
 ```
 ```js
-// Single *tool* require
-const getProp = require('@multitool-js/objects/tools/getProp');
+// Single *tool* require/import
+const { getProp } = require('@multitool-js/objects/tools/getProp');
+// OR
+import { getProp } from '@multitool-js/objects/tools/getProp';
 ```
 
 ### *Tools:*
@@ -18,5 +22,6 @@ const getProp = require('@multitool-js/objects/tools/getProp');
 | getProp | Retrives a property from an object | 
 | hasProp | Checks if an object contains a property | 
 | setProp | Sets a property in an object | 
-| replaceProp | Replaces a property in an object | 
+| replaceProp | Replaces a property in an object |  
+| deepMerge | Merges two objects, any child object is recursively recreated | 
 ---

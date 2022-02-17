@@ -5,9 +5,9 @@
     "test": "mocha"
   },
   "author": "Lorenzo Vernazza",
-  "dependencies": {},
   "devDependencies": {
     "eslint": "^8.1.0",
     "eslint-config-tidy-octopus": "^0.1.3"
-  }
+  },
+  "dependencies": {}
 }

@@ -6,11 +6,11 @@
  *
  * getProp('foo.bar', obj) // returns 0
  */
-const getProp = (
-	/** Property to get. */prop,
-	/** Object root. */root,
-	/** Default value when not found. */defaultValue = undefined
-) => {
+function getProp(
+		/** Property to get. */prop,
+		/** Object root. */root,
+		/** Default value when not found. */defaultValue = undefined
+) {
 	if (!root) return defaultValue;
 	if (!prop || prop.length == 0) return root;
 	const keys = typeof prop === 'string' ? prop.split('.') : prop;
@@ -20,6 +20,7 @@ const getProp = (
 		else current = current[key];
 	}
 	return current;
-};
+}
 
+getProp.getProp = getProp;
 module.exports = getProp;

@@ -1,0 +1,16 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@multitool-js/configmanager": "file:../ConfigManager",
+    "@multitool-js/objects": "file:../Objects",
+    "@multitool-js/climaker": "file:../CLIMaker"
+  }
+}

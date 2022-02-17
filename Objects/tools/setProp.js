@@ -9,22 +9,22 @@
  * "obj" is now { foo: { bar: 0 } }
  *
  */
-const setProp = (
-	/** Property to set. */prop = '',
-	/** Object root. */root = {},
-	/** Property value. */value = undefined,
-	/** Setter options. */
-	{
+function setProp(
+		/** Property to set. */prop = '',
+		/** Object root. */root = {},
+		/** Property value. */value = undefined,
+		/** Setter options. */
+		{
 		/** Sets value as readonly (*false*) or read/write (*true*). Default *true*. */
-		writable = true,
-		/** Creates missing sub-keys:
+			writable = true,
+			/** Creates missing sub-keys:
 		 * - *false* throws errors for missing keys
 		 * - "ignore" does not throw errors
 		 * - "last" creates only the last key
-		 * - "last-ignore" as "last" but does not throw errors. 
-		 * Default *true*. */ 
-		createMissing = true
-	} = {}) => {
+		 * - "last-ignore" as "last" but does not throw errors.
+		 * Default *true*. */
+			createMissing = true
+		} = {}) {
 	if (!prop) throw Error('Missing param property');
 	const keys = (typeof prop === 'string') ? prop.split('.') : prop;
 	let cursor = root;
@@ -57,5 +57,7 @@ const setProp = (
 		}
 	}
 	return root;
-};
+}
+
+setProp.setProp = setProp;
 module.exports = setProp;

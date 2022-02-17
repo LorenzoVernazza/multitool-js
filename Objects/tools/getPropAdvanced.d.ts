@@ -14,8 +14,10 @@
  * getProp('fo^^^.o.bar', obj) // returns 0
  *
  */
-export default function getPropAdvanced(
+declare function getPropAdvanced(
 	/** Property to get. */prop: string | string[],
 	/** Object root. */root: object,
 	/** Replacement value when not found. */replacement?: any
 ): any;
+
+export { getPropAdvanced };

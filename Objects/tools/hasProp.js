@@ -7,10 +7,10 @@
  * hasProp('foo.bar', obj) // returns true
  */
 function hasProp(
-	/** Property to get. */prop,
-	/** Object root. */root
+		/** Property to get. */prop,
+		/** Object root. */root
 ) {
-	if (!root) return defaultValue;
+	if (!root) return false;
 	if (!prop || prop.length == 0) return root;
 	const keys = typeof prop === 'string' ? prop.split('.') : prop;
 	let current = root;
@@ -19,5 +19,7 @@ function hasProp(
 		else current = current[key];
 	}
 	return (current !== undefined);
-};
+}
+
+hasProp.hasProp = hasProp;
 module.exports = hasProp;

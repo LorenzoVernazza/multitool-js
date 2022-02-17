@@ -1,6 +1,6 @@
 {
   "name": "@multitool-js/objects",
-  "version": "1.0.0",
+  "version": "1.1.6",
   "description": "A collection of useful object-oriented methods.",
   "main": "index.js",
   "scripts": {
@@ -8,15 +8,12 @@
   },
   "files": [
     "index.js",
+    "index.d.ts",
     "tools/"
   ],
   "keywords": [
     "multitool"
   ],
   "author": "Lorenzo Vernazza",
-  "license": "ISC",
-  "devDependencies": {
-    "eslint": "^8.1.0",
-    "eslint-config-tidy-octopus": "^0.1.3"
-  }
+  "license": "ISC"
 }

@@ -13,23 +13,23 @@
  * "obj" is now { foo: { bar: 1 } }
  */
 function replaceProp(
-	/** Property to set. */prop = '',
-	/** Object root. */root = {},
-	/** Replacer function. */replacer = () => {},
-	/** Replacer options. */
-	{
+		/** Property to set. */prop = '',
+		/** Object root. */root = {},
+		/** Replacer function. */replacer = () => {},
+		/** Replacer options. */
+		{
 		/** Sets value as readonly (*false*) or read/write (*true*). Default *true*. */
-		writable = true,
-		/** Creates missing sub-keys:
+			writable = true,
+			/** Creates missing sub-keys:
 		 * - *true* creates all missing sub-keys (when possible)
 		 * - *false* throws errors for missing keys
 		 * - "force" creates all missing sub-keys and replaces existing non-object keys
 		 * - "ignore" does not throw errors
 		 * - "last" creates only the last key
-		 * - "last-ignore" as "last" but does not throw errors. 
-		 * Default *false*. */ 
-		createMissing = false
-	} = {}
+		 * - "last-ignore" as "last" but does not throw errors.
+		 * Default *false*. */
+			createMissing = false
+		} = {}
 ) {
 	if (!prop) throw Error('Missing param property');
 	const keys = (typeof prop === 'string') ? prop.split('.') : prop;
@@ -47,7 +47,7 @@ function replaceProp(
 					throw Error('Unable to replace, missing sub-key: "' + keys.join('.') + '".');
 				}
 			}
-			const value = replacer(cursor[key])
+			const value = replacer(cursor[key]);
 			cursor[key] = value;
 			if (!writable) Object.defineProperty(cursor, key, { value, writable: false, configurable: false });
 		} else {
@@ -60,10 +60,12 @@ function replaceProp(
 					throw Error('Unable to replace, missing sub-key: "' + keys.slice(0, index + 1).join('.') + '".');
 				}
 			}
-			if (createMissing === 'force' && typeof cursor[key] !== 'object') cursor[key] = {}
+			if (createMissing === 'force' && typeof cursor[key] !== 'object') cursor[key] = {};
 			cursor = cursor[key];
 		}
 	}
 	return root;
-};
+}
+
+replaceProp.replaceProp = replaceProp;
 module.exports = replaceProp;

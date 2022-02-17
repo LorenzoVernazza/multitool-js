@@ -3,8 +3,10 @@ const path = require('path');
 const getProp = require('@multitool-js/objects/tools/getProp');
 const setProp = require('@multitool-js/objects/tools/setProp');
 
-const CONFIG_DIR = (process.env.NODE_CONFIG_DIR || path.resolve(process.cwd(), process.env.NODE_CONFIG_DIR || './config'))
+const CONFIG_DIR = (process.env.NODE_CONFIG_DIR || path.resolve(process.cwd(), process.env.NODE_CONFIG_DIR || './config'));
 const RUNTIME_FILE = 'runtime.json';
+const ENV_FILE = 'custom-environment-variables.json';
+const ARGS_FILE = 'custom-arguments.json';
 
 const config = {};
 
@@ -30,60 +32,123 @@ function mergeConfig(newConfig, oldConfig = config) {
 	}
 }
 
-function mergeConfigWithEnv(newConfig, oldConfig = config) {
+const TRUTHY_VALUES = ['true', '1', 'y'];
+const FALSY_VALUES = ['false', '0', 'n'];
+
+function parseValue(value, parser = 'STRING', appendError) {
+	const lower = (value || '').toLowerCase();
+	switch (parser) {
+		case 'BOOLEAN':
+			if (TRUTHY_VALUES.includes(lower)) {
+				return { value: true };
+			} else if (FALSY_VALUES.includes(lower)) {
+				return { value: false };
+			} else {
+				return { value: undefined };
+			}
+		case 'BOOLEAN_ONLY':
+			if (TRUTHY_VALUES.includes(lower)) {
+				return { value: true };
+			} else if (value) {
+				return { value: false };
+			} else {
+				return { value: undefined };
+			}
+		case 'MERGE':
+			try {
+				return {
+					value: JSON.parse(value),
+					merge: true
+				};
+			} catch (err) {
+				return { value };
+			}
+		case 'JSON':
+			try {
+				return { value: JSON.parse(value) };
+			} catch (err) {
+				return { value };
+			}
+		case 'JSON_ONLY':
+			try {
+				return { value: JSON.parse(value) };
+			} catch (err) {
+				return { value: undefined };
+			}
+		case 'NUMBER':
+			if (value !== undefined && !isNaN(value)) {
+				return { value: Number(value) };
+			} else {
+				return { value };
+			}
+		case 'NUMBER_NAN':
+			if (value !== undefined) {
+				return { value: Number(value) };
+			} else {
+				return { value };
+			}
+		case 'NUMBER_ONLY':
+			if (value !== undefined && !isNaN(value)) {
+				return { value: Number(value) };
+			} else {
+				return { value: undefined };
+			}
+		case 'STRING':
+			return { value };
+		default:
+			throw Error(`Unknown parser "${parser}" ${appendError}`);
+	}
+}
+
+function mergeConfigWithEnv(newConfig, oldConfig = config, fullKey = '') {
 	for (const [key, value] of Object.entries(newConfig)) {
 		if (value && typeof value === 'object') {
 			if (!oldConfig[key] || typeof oldConfig[key] !== 'object') oldConfig[key] = {};
-			mergeConfigWithEnv(value, oldConfig[key]);
+			mergeConfigWithEnv(value, oldConfig[key], fullKey ? `${fullKey}.${key}` : key);
 		} else if (typeof value == 'string') {
-			let envValue;
-			let merge = false;
-			if (value.startsWith('MERGE:')) {
-				let trimmed = value.substr(6);
-				try {
-					envValue = JSON.parse(process.env[trimmed]);
-					merge = true;
-				} catch (err) {
-					envValue = process.env[trimmed];
-				}
-			} else if (value.startsWith('BOOLEAN:')) {
-				let trimmed = value.substr(8);
-				switch ((process.env[trimmed] || '').toLowerCase()) {
-					case 'true':
-					case '1':
-						envValue = true; break;
-					case 'false':
-					case '0':
-						envValue = false; break;
-				}
-			} else if (value.startsWith('JSON:')) {
-				let trimmed = value.substr(5);
-				try {
-					envValue = JSON.parse(process.env[trimmed]);
-				} catch (err) {
-					envValue = process.env[trimmed];
-				}
-			} else if (value.startsWith('JSON_ONLY:')) {
-				let trimmed = value.substr(10);
-				try {
-					envValue = JSON.parse(process.env[trimmed]);
-				} catch (err) {
-					envValue = undefined;
-				}
-			} else if (value.startsWith('NUMBER:')) {
-				let trimmed = value.substr(7);
-				if (process.env[trimmed] !== undefined)	envValue = Number(process.env[trimmed]);
-				if (envValue === NaN) envValue = process.env[trimmed];
-			} else if (value.startsWith('NUMBER_NAN:')) {
-				let trimmed = value.substr(11);
-				if (process.env[trimmed] !== undefined)	envValue = Number(process.env[trimmed]);
-			} else if (value.startsWith('NUMBER_ONLY:')) {
-				let trimmed = value.substr(12);
-				envValue = Number(process.env[trimmed]);
-				if (envValue === NaN) envValue = undefined;
+			let parser, _value;
+			const split = value.split(':');
+			if (split.length > 1) {
+				parser = split[0].toUpperCase();
+				_value = split[1];
 			} else {
-				envValue = process.env[value];
+				_value = value;
 			}
+			const {
+				merge = false,
+				value: envValue
+			} = parseValue(process.env[_value], parser, `in "${fullKey}" (${ENV_FILE})`);
+			if (envValue !== undefined)	{
+				if (merge) {
+					mergeConfig({ [key]: envValue }, oldConfig);
+				} else {
+					oldConfig[key] = envValue;
+				}
+			}
+		}
+	}
+}
+
+function mergeConfigWithArgs(newConfig, oldConfig = config, fullKey = '') {
+	for (const [key, value] of Object.entries(newConfig)) {
+		if (value && typeof value === 'object') {
+			if (!oldConfig[key] || typeof oldConfig[key] !== 'object') oldConfig[key] = {};
+			mergeConfigWithArgs(value, oldConfig[key], fullKey ? `${fullKey}.${key}` : key);
+		} else if (typeof value == 'string') {
+			let parser, flags;
+			const split = value.split(':');
+			if (split.length > 1) {
+				parser = split[0].toUpperCase();
+				if (parser == '=') parser = 'STRING';
+				flags = split[1].split(',');
+			} else {
+				flags = value.split(',');
+			}
+
+			const {
+				merge = false,
+				value: envValue
+			} = parseValue(value, parser, `in "${fullKey}" (${ARGS_FILE})`);
 			if (envValue !== undefined)	{
 				if (merge) {
 					mergeConfig({ [key]: envValue }, oldConfig);
@@ -109,12 +174,16 @@ function loadConfigFile(fileName) {
 }
 
 function loadEnvFile(fileName) {
-	mergeConfigWithEnv(readConfigFile(fileName) || {})
+	mergeConfigWithEnv(readConfigFile(fileName) || {});
+}
+
+function loadArgsFile(fileName) {
+	mergeConfigWithArgs(readConfigFile(fileName) || {});
 }
 
 function wipeConfig() {
 	for (const key of Object.keys(config)) {
-		delete config[key]
+		delete config[key];
 	}
 }
 
@@ -128,21 +197,20 @@ function load(wipe = true) {
 	}
 	loadConfigFile('local.json');
 	loadConfigFile(RUNTIME_FILE);
-	loadEnvFile('custom-environment-variables.json');
+	loadEnvFile(ENV_FILE);
 }
 
 // Export declarations
 
 function createSaveConfig(options = {}) {
 	if (options.whitelist) {
-		let whitelistedConfig = options.overwrite ? {} : (readConfigFile(RUNTIME_FILE) || {});
+		const whitelistedConfig = options.overwrite ? {} : (readConfigFile(RUNTIME_FILE) || {});
 		for (const item of options.whitelist) {
-			let value = getProp(item, config);
-			if (value !== undefined) setProp(item, whitelistedConfig, value);
+			setProp(item, whitelistedConfig, getProp(item, config));
 		}
 		return JSON.stringify(whitelistedConfig);
 	}
-	return JSON.stringify(config)
+	return JSON.stringify(config);
 }
 function saveConfig(options) {
 	return fs.writeFile(getPath(RUNTIME_FILE), createSaveConfig(options));
@@ -159,14 +227,14 @@ function deleteConfigSync() {
 }
 
 function set(key, value, writable = true) {
-	return setProp(key, config, value, { writable })
-};
+	return setProp(key, config, value, { writable });
+}
 function has(key) {
-	return getProp(key, config) !== undefined
-};
+	return getProp(key, config) !== undefined;
+}
 function get(key, defaultValue) {
-	return getProp(key, config, defaultValue)
-};
+	return getProp(key, config, defaultValue);
+}
 
 load(false);
 

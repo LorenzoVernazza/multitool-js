@@ -14,7 +14,8 @@ function _deepMerge(value, target, params = {}, settings = {}) {
 		replace = true
 	} = settings;
 
-	if (filter && fullKey && !filter(value, target, params)) return value;
+	// if (filter && fullKey && !filter(value, target, params)) return SKIP;
+	if (filter && !filter(value, target, { key, fullKey, source, destination })) return fullKey ? SKIP : target;
 	if (Array.isArray(value)) {
 		if (!Array.isArray(target)) {
 			if (target === undefined) {
@@ -36,12 +37,13 @@ function _deepMerge(value, target, params = {}, settings = {}) {
 			target.unshift(...value);
 		} else {
 			for (let i = 0; i < value.length; i++) {
-				target[i] = _deepMerge(value[i], target[i], {
+				const merged = _deepMerge(value[i], target[i], {
 					key: `${i}`,
-					fullKey: `${fullKey}.${i}`,
+					fullKey: `${fullKey ? `${fullKey}.` : ''}${i}`,
 					source,
 					destination
 				}, settings);
+				if (merged !== SKIP) target[i] = merged;
 			}
 		}
 	} else if (value && typeof value == 'object') {
@@ -60,12 +62,13 @@ function _deepMerge(value, target, params = {}, settings = {}) {
 			}
 		}
 		for (const [_key, _value] of Object.entries(value)) {
-			target[_key] = _deepMerge(_value, target[_key], {
+			const merged = _deepMerge(_value, target[_key], {
 				key: _key,
-				fullKey: `${fullKey}.${_key}`,
+				fullKey: `${fullKey ? `${fullKey}.` : ''}${_key}`,
 				source,
 				destination
 			}, settings);
+			if (merged !== SKIP) target[_key] = merged;
 		}
 	} else if (replace || target === undefined) {
 		if (typeof replace == 'function') {
@@ -95,7 +98,7 @@ function deepMerge(source, destination, {
 	}
 	return _deepMerge(source, targetDestination, {
 		source,
-		targetDestination
+		destination: targetDestination
 	}, {
 		filter,
 		arrayMergeMethod,

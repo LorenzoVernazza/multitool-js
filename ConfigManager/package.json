@@ -19,7 +19,7 @@
   "author": "Lorenzo Vernazza",
   "license": "ISC",
   "dependencies": {
-    "@multitool-js/objects": "^1.1.6",
+    "@multitool-js/objects": "^1.2.0",
     "@multitool-js/process": "^1.0.0"
   }
 }

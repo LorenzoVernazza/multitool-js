@@ -1,6 +1,6 @@
 {
   "name": "@multitool-js/objects",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A collection of useful object-oriented methods.",
   "main": "index.js",
   "scripts": {

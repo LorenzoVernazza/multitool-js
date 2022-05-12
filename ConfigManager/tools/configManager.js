@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const getProp = require('@multitool-js/objects/tools/getProp');
-const setProp = require('@multitool-js/objects/tools/setProp');
+const { getProp } = require('@multitool-js/objects/tools/getProp');
+const { setProp } = require('@multitool-js/objects/tools/setProp');
 
 const CONFIG_DIR = (process.env.NODE_CONFIG_DIR || path.resolve(process.cwd(), process.env.NODE_CONFIG_DIR || './config'));
 const RUNTIME_FILE = 'runtime.json';

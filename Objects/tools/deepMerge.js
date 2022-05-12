@@ -107,5 +107,4 @@ function deepMerge(source, destination, {
 	});
 }
 
-deepMerge.deepMerge = deepMerge;
-module.exports = deepMerge;
+module.exports = { deepMerge };

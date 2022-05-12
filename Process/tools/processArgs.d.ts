@@ -1,5 +1,5 @@
 /** Parses arguments and returns an object. */
-export default function processArgs(
+export function processArgs(
 	/** Array of arguments, defaults as *process.argv.slice(2)*. */
 	args:? string[],
 	/** Configuration object. */
@@ -25,7 +25,7 @@ export default function processArgs(
 		 * 
 		 * output.flags: { "help": true }
 		 */
-		params: { [flag: string]: number; },
+		params: { [flag: string]: number|true; },
 		/** Breaker, the breaker defines when to stop parsing arguments, defaults as -- */
 		breaker: string|string[],
 		/** Shorthand flag regex override (-a) */
@@ -49,3 +49,4 @@ export default function processArgs(
 	/** Array of arguments after the breaker (--). */
 	rest: string[]
 };
+export default processArgs;

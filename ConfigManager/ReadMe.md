@@ -46,8 +46,8 @@ const configManager = require('@multitool-js/configManager');
 | reload     | Reloads all the configuration values (loses unsaved values).                     |
 | save       | Saves the configuration file (includes values set during runtime).               |
 | saveSync   | Synchronously saves the configuration file (includes values set during runtime). |
-| delete     | Deletes the currently saved configuration.                                       |
-| deleteSync | Synchronously deletes the currently saved configuration.                         |
+| remove     | Removes the currently saved configuration.                                       |
+| removeSync | Synchronously removes the currently saved configuration.                         |
 
 ### *Built-in CLI*
 

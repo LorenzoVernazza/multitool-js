@@ -34,5 +34,4 @@ function getPropAdvanced(
 	return current;
 }
 
-getPropAdvanced.getPropAdvanced = getPropAdvanced;
-module.exports = getPropAdvanced;
+module.exports = { getPropAdvanced };

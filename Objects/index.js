@@ -5,6 +5,7 @@ const { setProp } = require('./tools/setProp');
 const { replaceProp } = require('./tools/replaceProp');
 const { replacePropAsync } = require('./tools/replacePropAsync');
 const { deepMerge } = require('./tools/deepMerge');
+const { deepCompare } = require('./tools/deepCompare');
 
 /** Objects group */
 module.exports = {
@@ -14,5 +15,6 @@ module.exports = {
 	setProp,
 	replaceProp,
 	replacePropAsync,
-	deepMerge
+	deepMerge,
+	deepCompare
 };

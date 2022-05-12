@@ -5,20 +5,20 @@ Each *tool* or group of *tools* can be required/imported on its own like this:
 ```js
 // Full require/import
 const multitool = require('@multitool-js/promises');
-const promiseAny = multitool.promiseAny;
+const promiseGroup = multitool.promiseGroup;
 // OR
-import { promiseAny } from '@multitool-js/promises';
+import { promiseGroup } from '@multitool-js/promises';
 ```
 ```js
 // Single *tool* require/import
-const promiseAny = require('@multitool-js/promises/tools/promiseAny');
+const { promiseGroup } = require('@multitool-js/promises/tools/promiseGroup');
 // OR
-import promiseAny from ('@multitool-js/promises/tools/promiseAny');
+import { promiseGroup } from ('@multitool-js/promises/tools/promiseGroup');
 ```
 
 ### *Tools:*
 | tool | description |
 |--------|-------------| 
-| promiseAny | Handles a group of promises, extendin the capabilities of ``Promise.all()`` | 
+| promiseGroup | Handles a group of promises, extending the capabilities of ``Promise.all()`` | 
 | timer | Returns a promise that is resolved/rejected after a timeout |
 ---

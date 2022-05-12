@@ -7,7 +7,7 @@
  *
  * For each promise returns { res } if resolved, { err } if rejected.
  */
-function promiseAny(/** Promises. */promises = [], /** Options. */options = {}) {
+function promiseGroup(/** Promises. */promises = [], /** Options. */options = {}) {
 	return new Promise((resolve, reject) => {
 		const results = Array.isArray(promises) ? [] : {};
 		const length = Array.isArray(promises) ? promises.length : Object.keys(promises).length;
@@ -58,4 +58,4 @@ function promiseAny(/** Promises. */promises = [], /** Options. */options = {}) 
 	});
 }
 
-module.exports = promiseAny;
+module.exports = { promiseGroup };

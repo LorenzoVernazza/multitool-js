@@ -7,7 +7,7 @@
   "author": "Lorenzo Vernazza",
   "devDependencies": {
     "eslint": "^8.1.0",
-    "eslint-config-tidy-octopus": "^0.1.3"
-  },
-  "dependencies": {}
+    "eslint-config-tidy-octopus": "^0.1.3",
+    "mocha": "^9.2.1"
+  }
 }

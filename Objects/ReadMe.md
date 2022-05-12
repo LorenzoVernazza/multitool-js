@@ -24,4 +24,5 @@ import { getProp } from '@multitool-js/objects/tools/getProp';
 | setProp | Sets a property in an object | 
 | replaceProp | Replaces a property in an object |  
 | deepMerge | Merges two objects, any child object is recursively recreated | 
+| deepCompare | Checks if two values are equal. Objects and Arrays are recursively compared for each value | 
 ---

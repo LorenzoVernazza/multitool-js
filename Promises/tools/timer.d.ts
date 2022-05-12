@@ -9,4 +9,4 @@ declare function timer(
 		/** Resolve/Reject arguments. */...args
 ) : Promise<any[]>;
 
-export = timer;
+export { timer };

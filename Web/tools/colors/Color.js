@@ -309,6 +309,26 @@ class Color {
 		}
 	}
 
+	/** Saturates the color. Use *newInstance* to create a new color and keep the current one. */
+	saturate(/* Saturation amount (0 - 100) */step = 10, /** If true returns a new Color instance instead of changing this one. */newInstance = false) {
+		if (newInstance) {
+			return (new Color(this)).saturate(step);
+		} else {
+			this.saturation += step / 100;
+			return this;
+		}
+	}
+
+	/** Desaturates the color. Use *newInstance* to create a new color and keep the current one. */
+	desaturate(/* Desaturation amount (0 - 100) */step = 10, /** If true returns a new Color instance instead of changing this one. */newInstance = false) {
+		if (newInstance) {
+			return (new Color(this)).desaturate(step);
+		} else {
+			this.saturation -= step / 100;
+			return this;
+		}
+	}
+
 	/** Returns complementary color. */
 	getComplementary() {
 		const complementary = new Color(this);
@@ -381,4 +401,7 @@ Color.random = () => (new Color(randomColor()));
 /** Returns an array of monochromatic colors based on a starting color hue. */
 Color.monochromaticColors = (startingColor, n = 7) => (new Color(startingColor).getMonochromaticColors(n));
 
+module.exports = Color;
+
+Color.Color = Color;
 module.exports = Color;

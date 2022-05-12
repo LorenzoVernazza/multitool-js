@@ -59,5 +59,4 @@ function setProp(
 	return root;
 }
 
-setProp.setProp = setProp;
-module.exports = setProp;
+module.exports = { setProp };

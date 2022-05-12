@@ -44,9 +44,9 @@ declare type Options = {
  *
  * For each promise returns { res } if resolved, { err } if rejected.
  */
-declare function promiseAny(
+declare function promiseGroup(
 	/** Promises. */promises: object | Promise<any>[], 
 	/** Options. */options: Options
 ): Promise<object|any[]>;
 
-export = promiseAny;
+export { promiseGroup };

@@ -64,5 +64,4 @@ async function replacePropAsync(
 	return root;
 }
 
-replacePropAsync.replacePropAsync = replacePropAsync;
-module.exports = replacePropAsync;
+module.exports = { replacePropAsync };

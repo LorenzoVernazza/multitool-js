@@ -5,3 +5,4 @@ export { setProp } from './tools/setProp';
 export { replaceProp } from './tools/replaceProp';
 export { replacePropAsync } from './tools/replacePropAsync';
 export { deepMerge } from './tools/deepMerge';
+export { deepCompare } from './tools/deepCompare';

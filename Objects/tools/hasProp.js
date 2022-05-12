@@ -21,5 +21,4 @@ function hasProp(
 	return (current !== undefined);
 }
 
-hasProp.hasProp = hasProp;
-module.exports = hasProp;
+module.exports = { hasProp };

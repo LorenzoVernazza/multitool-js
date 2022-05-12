@@ -219,10 +219,10 @@ function saveConfigSync(options) {
 	fs.writeFileSync(getPath(RUNTIME_FILE), createSaveConfig(options));
 }
 
-function deleteConfig() {
+function removeConfig() {
 	return fs.unlink(getPath(RUNTIME_FILE));
 }
-function deleteConfigSync() {
+function removeConfigSync() {
 	fs.unlinkSync(getPath(RUNTIME_FILE));
 }
 
@@ -247,7 +247,9 @@ module.exports = {
 	has,
 	save: saveConfig,
 	saveSync: saveConfigSync,
-	delete: deleteConfig,
-	deleteSync: deleteConfigSync,
+	delete: removeConfig,
+	remove: removeConfig,
+	deleteSync: removeConfigSync,
+	removeSync: removeConfigSync,
 	reload: load
 };

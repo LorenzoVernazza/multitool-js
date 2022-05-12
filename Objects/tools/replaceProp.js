@@ -67,5 +67,4 @@ function replaceProp(
 	return root;
 }
 
-replaceProp.replaceProp = replaceProp;
-module.exports = replaceProp;
+module.exports = { replaceProp };

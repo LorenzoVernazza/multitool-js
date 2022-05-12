@@ -1,9 +1,9 @@
-const promiseAny = require('./tools/promiseAny');
-const timer = require('./tools/timer');
+const { promiseGroup } = require('./tools/promiseGroup');
+const { timer } = require('./tools/timer');
 
-Promise.any = promiseAny;
+Promise.group = promiseGroup;
 
 module.exports = {
-	promiseAny,
+	promiseGroup,
 	timer
 };

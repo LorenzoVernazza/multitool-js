@@ -22,5 +22,4 @@ function getProp(
 	return current;
 }
 
-getProp.getProp = getProp;
-module.exports = getProp;
+module.exports = { getProp };

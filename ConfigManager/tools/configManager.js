@@ -1,203 +1,27 @@
 const fs = require('fs');
-const path = require('path');
 const { getProp } = require('@multitool-js/objects/tools/getProp');
 const { setProp } = require('@multitool-js/objects/tools/setProp');
-
-const CONFIG_DIR = (process.env.NODE_CONFIG_DIR || path.resolve(process.cwd(), process.env.NODE_CONFIG_DIR || './config'));
-const RUNTIME_FILE = 'runtime.json';
-const ENV_FILE = 'custom-environment-variables.json';
-const ARGS_FILE = 'custom-arguments.json';
-
-const config = {};
-
-function getPath(fileName) {
-	return path.join(CONFIG_DIR, fileName);
-}
+const { CONFIG_DIR, ENV_FILE, RUNTIME_FILE, ARGS_FILE, AUTOLOAD_ENABLED, VERBOSE_LOADING } = require('../lib/settings');
+const { wipeConfig, config } = require('../lib/config');
+const { readConfigFile, loadConfigFile, loadEnvFile, loadArgsFile, getPath, registerFileParser } = require('../lib/files');
 
 function getEnv() {
-	return (process.env.NODE_ENV || 'development');
+	return (process.env.NODE_CONFIG_ENV || process.env.NODE_ENV || 'development');
 }
 
 function setEnv(value = 'production') {
-	return process.env.NODE_ENV = value;
-}
-
-function mergeConfig(newConfig, oldConfig = config) {
-	for (const [key, value] of Object.entries(newConfig)) {
-		if (value && typeof value === 'object' && (oldConfig[key] && typeof oldConfig[key] === 'object')) {
-			mergeConfig(value, oldConfig[key]);
-		} else {
-			oldConfig[key] = value;
-		}
-	}
-}
-
-const TRUTHY_VALUES = ['true', '1', 'y'];
-const FALSY_VALUES = ['false', '0', 'n'];
-
-function parseValue(value, parser = 'STRING', appendError) {
-	const lower = (value || '').toLowerCase();
-	switch (parser) {
-		case 'BOOLEAN':
-			if (TRUTHY_VALUES.includes(lower)) {
-				return { value: true };
-			} else if (FALSY_VALUES.includes(lower)) {
-				return { value: false };
-			} else {
-				return { value: undefined };
-			}
-		case 'BOOLEAN_ONLY':
-			if (TRUTHY_VALUES.includes(lower)) {
-				return { value: true };
-			} else if (value) {
-				return { value: false };
-			} else {
-				return { value: undefined };
-			}
-		case 'MERGE':
-			try {
-				return {
-					value: JSON.parse(value),
-					merge: true
-				};
-			} catch (err) {
-				return { value };
-			}
-		case 'JSON':
-			try {
-				return { value: JSON.parse(value) };
-			} catch (err) {
-				return { value };
-			}
-		case 'JSON_ONLY':
-			try {
-				return { value: JSON.parse(value) };
-			} catch (err) {
-				return { value: undefined };
-			}
-		case 'NUMBER':
-			if (value !== undefined && !isNaN(value)) {
-				return { value: Number(value) };
-			} else {
-				return { value };
-			}
-		case 'NUMBER_NAN':
-			if (value !== undefined) {
-				return { value: Number(value) };
-			} else {
-				return { value };
-			}
-		case 'NUMBER_ONLY':
-			if (value !== undefined && !isNaN(value)) {
-				return { value: Number(value) };
-			} else {
-				return { value: undefined };
-			}
-		case 'STRING':
-			return { value };
-		default:
-			throw Error(`Unknown parser "${parser}" ${appendError}`);
-	}
-}
-
-function mergeConfigWithEnv(newConfig, oldConfig = config, fullKey = '') {
-	for (const [key, value] of Object.entries(newConfig)) {
-		if (value && typeof value === 'object') {
-			if (!oldConfig[key] || typeof oldConfig[key] !== 'object') oldConfig[key] = {};
-			mergeConfigWithEnv(value, oldConfig[key], fullKey ? `${fullKey}.${key}` : key);
-		} else if (typeof value == 'string') {
-			let parser, _value;
-			const split = value.split(':');
-			if (split.length > 1) {
-				parser = split[0].toUpperCase();
-				_value = split[1];
-			} else {
-				_value = value;
-			}
-			const {
-				merge = false,
-				value: envValue
-			} = parseValue(process.env[_value], parser, `in "${fullKey}" (${ENV_FILE})`);
-			if (envValue !== undefined)	{
-				if (merge) {
-					mergeConfig({ [key]: envValue }, oldConfig);
-				} else {
-					oldConfig[key] = envValue;
-				}
-			}
-		}
-	}
-}
-
-function mergeConfigWithArgs(newConfig, oldConfig = config, fullKey = '') {
-	for (const [key, value] of Object.entries(newConfig)) {
-		if (value && typeof value === 'object') {
-			if (!oldConfig[key] || typeof oldConfig[key] !== 'object') oldConfig[key] = {};
-			mergeConfigWithArgs(value, oldConfig[key], fullKey ? `${fullKey}.${key}` : key);
-		} else if (typeof value == 'string') {
-			let parser, flags;
-			const split = value.split(':');
-			if (split.length > 1) {
-				parser = split[0].toUpperCase();
-				if (parser == '=') parser = 'STRING';
-				flags = split[1].split(',');
-			} else {
-				flags = value.split(',');
-			}
-
-			const {
-				merge = false,
-				value: envValue
-			} = parseValue(value, parser, `in "${fullKey}" (${ARGS_FILE})`);
-			if (envValue !== undefined)	{
-				if (merge) {
-					mergeConfig({ [key]: envValue }, oldConfig);
-				} else {
-					oldConfig[key] = envValue;
-				}
-			}
-		}
-	}
-}
-
-function readConfigFile(fileName) {
-	const defaultPath = getPath(fileName);
-	if (fs.existsSync(defaultPath)) {
-		try {
-			return JSON.parse(fs.readFileSync(defaultPath));
-		} catch (e) {}
-	}
-}
-
-function loadConfigFile(fileName) {
-	mergeConfig(readConfigFile(fileName) || {});
-}
-
-function loadEnvFile(fileName) {
-	mergeConfigWithEnv(readConfigFile(fileName) || {});
-}
-
-function loadArgsFile(fileName) {
-	mergeConfigWithArgs(readConfigFile(fileName) || {});
-}
-
-function wipeConfig() {
-	for (const key of Object.keys(config)) {
-		delete config[key];
-	}
+	return process.env.NODE_CONFIG_ENV = value;
 }
 
 function load(wipe = true) {
+	if (VERBOSE_LOADING) console.info('Loading configuration files!');
 	if (wipe) wipeConfig();
-	loadConfigFile('default.json');
-	if (getEnv() == 'production') {
-		loadConfigFile('production.json');
-	} else {
-		loadConfigFile('development.json');
-	}
-	loadConfigFile('local.json');
-	loadConfigFile(RUNTIME_FILE);
+	loadConfigFile('default', true);
+	loadConfigFile(getEnv(), true);
+	loadConfigFile('local', true);
 	loadEnvFile(ENV_FILE);
+	// loadArgsFile(ARGS_FILE);
+	loadConfigFile(RUNTIME_FILE);
 }
 
 // Export declarations
@@ -236,7 +60,7 @@ function get(key, defaultValue) {
 	return getProp(key, config, defaultValue);
 }
 
-load(false);
+if (AUTOLOAD_ENABLED) load(false);
 
 module.exports = {
 	CONFIG_DIR,
@@ -251,5 +75,6 @@ module.exports = {
 	remove: removeConfig,
 	deleteSync: removeConfigSync,
 	removeSync: removeConfigSync,
-	reload: load
+	reload: load,
+	registerFileParser
 };

@@ -67,3 +67,11 @@ export function load(
 	 * Default *true* 
 	 */wipe?: boolean
 ): any;
+
+/** Adds or overwrites the parser for a specific extension. */
+export function registerFileParser(
+	/** Supported file extension. */
+	extension,
+	/** Parser function. Receives a string as input and must output an object. */
+	parser: (/** File content. */data: string) => Record<string, any> 
+): void;
